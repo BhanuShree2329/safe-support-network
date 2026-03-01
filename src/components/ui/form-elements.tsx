@@ -1,13 +1,55 @@
 import * as React from "react";
+import * as LabelPrimitive from "@radix-ui/react-label";
 import * as SelectPrimitive from "@radix-ui/react-select";
+import { cva, type VariantProps } from "class-variance-authority";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 
+// ─── Input ───────────────────────────────────────────────
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+  ({ className, type, ...props }, ref) => (
+    <input
+      type={type}
+      className={cn(
+        "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        className,
+      )}
+      ref={ref}
+      {...props}
+    />
+  ),
+);
+Input.displayName = "Input";
+
+// ─── Label ───────────────────────────────────────────────
+const labelVariants = cva("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70");
+
+const Label = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & VariantProps<typeof labelVariants>
+>(({ className, ...props }, ref) => (
+  <LabelPrimitive.Root ref={ref} className={cn(labelVariants(), className)} {...props} />
+));
+Label.displayName = LabelPrimitive.Root.displayName;
+
+// ─── Textarea ────────────────────────────────────────────
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({ className, ...props }, ref) => (
+  <textarea
+    className={cn(
+      "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+      className,
+    )}
+    ref={ref}
+    {...props}
+  />
+));
+Textarea.displayName = "Textarea";
+
+// ─── Select ──────────────────────────────────────────────
 const Select = SelectPrimitive.Root;
-
 const SelectGroup = SelectPrimitive.Group;
-
 const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = React.forwardRef<
@@ -34,11 +76,7 @@ const SelectScrollUpButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
 >(({ className, ...props }, ref) => (
-  <SelectPrimitive.ScrollUpButton
-    ref={ref}
-    className={cn("flex cursor-default items-center justify-center py-1", className)}
-    {...props}
-  >
+  <SelectPrimitive.ScrollUpButton ref={ref} className={cn("flex cursor-default items-center justify-center py-1", className)} {...props}>
     <ChevronUp className="h-4 w-4" />
   </SelectPrimitive.ScrollUpButton>
 ));
@@ -48,11 +86,7 @@ const SelectScrollDownButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
 >(({ className, ...props }, ref) => (
-  <SelectPrimitive.ScrollDownButton
-    ref={ref}
-    className={cn("flex cursor-default items-center justify-center py-1", className)}
-    {...props}
-  >
+  <SelectPrimitive.ScrollDownButton ref={ref} className={cn("flex cursor-default items-center justify-center py-1", className)} {...props}>
     <ChevronDown className="h-4 w-4" />
   </SelectPrimitive.ScrollDownButton>
 ));
@@ -67,21 +101,14 @@ const SelectContent = React.forwardRef<
       ref={ref}
       className={cn(
         "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-        position === "popper" &&
-          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        position === "popper" && "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className,
       )}
       position={position}
       {...props}
     >
       <SelectScrollUpButton />
-      <SelectPrimitive.Viewport
-        className={cn(
-          "p-1",
-          position === "popper" &&
-            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
-        )}
-      >
+      <SelectPrimitive.Viewport className={cn("p-1", position === "popper" && "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]")}>
         {children}
       </SelectPrimitive.Viewport>
       <SelectScrollDownButton />
@@ -104,10 +131,7 @@ const SelectItem = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
-    className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
-      className,
-    )}
+    className={cn("relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground", className)}
     {...props}
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -115,7 +139,6 @@ const SelectItem = React.forwardRef<
         <Check className="h-4 w-4" />
       </SelectPrimitive.ItemIndicator>
     </span>
-
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
 ));
@@ -130,6 +153,9 @@ const SelectSeparator = React.forwardRef<
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 export {
+  Input,
+  Label,
+  Textarea,
   Select,
   SelectGroup,
   SelectValue,
