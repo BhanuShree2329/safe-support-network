@@ -26,8 +26,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isOTPVerified, setIsOTPVerified] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("carenest_user");
-    const otpVerified = localStorage.getItem("carenest_otp_verified");
+    const stored = localStorage.getItem("careconnect_user");
+    const otpVerified = localStorage.getItem("careconnect_otp_verified");
     if (stored) setUser(JSON.parse(stored));
     if (otpVerified === "true") setIsOTPVerified(true);
   }, []);
@@ -40,32 +40,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       role,
       status: role === "admin" ? "approved" : "pending",
     };
-    // Save to users list
-    const users: User[] = JSON.parse(localStorage.getItem("carenest_users") || "[]");
+    const users: User[] = JSON.parse(localStorage.getItem("careconnect_users") || "[]");
     users.push(newUser);
-    localStorage.setItem("carenest_users", JSON.stringify(users));
-    // Save credentials
-    const creds = JSON.parse(localStorage.getItem("carenest_creds") || "{}");
+    localStorage.setItem("careconnect_users", JSON.stringify(users));
+    const creds = JSON.parse(localStorage.getItem("careconnect_creds") || "{}");
     creds[email] = { password, userId: newUser.id };
-    localStorage.setItem("carenest_creds", JSON.stringify(creds));
-    // Set current user
+    localStorage.setItem("careconnect_creds", JSON.stringify(creds));
     setUser(newUser);
     setIsOTPVerified(false);
-    localStorage.setItem("carenest_user", JSON.stringify(newUser));
-    localStorage.removeItem("carenest_otp_verified");
+    localStorage.setItem("careconnect_user", JSON.stringify(newUser));
+    localStorage.removeItem("careconnect_otp_verified");
     return newUser;
   };
 
   const login = (email: string, password: string): User | null => {
-    const creds = JSON.parse(localStorage.getItem("carenest_creds") || "{}");
+    const creds = JSON.parse(localStorage.getItem("careconnect_creds") || "{}");
     if (creds[email] && creds[email].password === password) {
-      const users: User[] = JSON.parse(localStorage.getItem("carenest_users") || "[]");
+      const users: User[] = JSON.parse(localStorage.getItem("careconnect_users") || "[]");
       const found = users.find((u) => u.id === creds[email].userId);
       if (found) {
         setUser(found);
         setIsOTPVerified(false);
-        localStorage.setItem("carenest_user", JSON.stringify(found));
-        localStorage.removeItem("carenest_otp_verified");
+        localStorage.setItem("careconnect_user", JSON.stringify(found));
+        localStorage.removeItem("careconnect_otp_verified");
         return found;
       }
     }
@@ -75,13 +72,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null);
     setIsOTPVerified(false);
-    localStorage.removeItem("carenest_user");
-    localStorage.removeItem("carenest_otp_verified");
+    localStorage.removeItem("careconnect_user");
+    localStorage.removeItem("careconnect_otp_verified");
   };
 
   const verifyOTP = () => {
     setIsOTPVerified(true);
-    localStorage.setItem("carenest_otp_verified", "true");
+    localStorage.setItem("careconnect_otp_verified", "true");
   };
 
   return (

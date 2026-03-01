@@ -66,7 +66,7 @@ export default function RegisterPage() {
             <div className="w-20 h-20 rounded-3xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-8">
               <Heart className="w-10 h-10 text-primary-foreground" />
             </div>
-            <h2 className="text-4xl font-extrabold font-display text-primary-foreground mb-4">Join CareNest</h2>
+            <h2 className="text-4xl font-extrabold font-display text-primary-foreground mb-4">Join CareConnect</h2>
             <p className="text-primary-foreground/80 text-lg leading-relaxed">
               Create your account and become part of a transparent, ethical care ecosystem.
             </p>
@@ -187,7 +187,7 @@ export default function RegisterPage() {
                       </div>
                       <div>
                         <h3 className="font-bold text-sm text-card-foreground mb-1">Terms of Service</h3>
-                        <p className="text-xs text-muted-foreground leading-relaxed">I agree to the CareNest Terms of Service, including data processing, role-based access policies, and platform usage guidelines.</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed">I agree to the CareConnect Terms of Service, including data processing, role-based access policies, and platform usage guidelines.</p>
                       </div>
                     </div>
                   </div>
