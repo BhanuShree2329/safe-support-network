@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
-import { Heart, LogOut, ClipboardList, CheckCircle } from "lucide-react";
+import { ClipboardList, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { getCareRequests, updateCareRequest, CareRequest } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
+import DashboardHeader from "@/components/DashboardHeader";
 
 const statusColors: Record<string, string> = {
   pending: "bg-warning/10 text-warning",
@@ -15,14 +15,12 @@ const statusColors: Record<string, string> = {
 };
 
 export default function CaretakerDashboard() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [requests, setRequests] = useState<CareRequest[]>([]);
 
   const load = () => {
     const all = getCareRequests();
-    // Show assigned to me or approved (available)
     setRequests(all.filter((r) => r.assignedTo === user?.id || r.status === "approved"));
   };
 
@@ -42,23 +40,7 @@ export default function CaretakerDashboard() {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <header className="bg-card border-b border-border sticky top-0 z-50">
-        <div className="container mx-auto flex items-center justify-between h-16 px-4">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl gradient-hero flex items-center justify-center">
-                <Heart className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <span className="font-display font-bold text-xl text-foreground">CareNest</span>
-            </Link>
-            <span className="text-xs px-2.5 py-1 rounded-full bg-info/10 text-info font-medium">Caretaker</span>
-          </div>
-          <Button variant="ghost" size="icon" onClick={() => { logout(); navigate("/"); }}>
-            <LogOut className="w-5 h-5" />
-          </Button>
-        </div>
-      </header>
-
+      <DashboardHeader />
       <div className="container mx-auto p-4 md:p-8 max-w-4xl">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-2xl font-bold font-display text-foreground mb-1">Welcome, {user?.name}</h1>

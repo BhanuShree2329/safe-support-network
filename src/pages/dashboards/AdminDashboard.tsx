@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
-import { Heart, LogOut, Users, Shield, ClipboardCheck, CheckCircle, XCircle, FileText, Building2 } from "lucide-react";
+import { Heart, Users, CheckCircle, XCircle, FileText, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { getAllUsers, updateUserStatus, getCareRequests, getOrphanRequests, updateCareRequest, updateOrphanRequest } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@/contexts/AuthContext";
 import type { CareRequest, OrphanRequest } from "@/lib/mockData";
+import DashboardHeader from "@/components/DashboardHeader";
 
 const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.05 } } };
 const item = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } };
 
 export default function AdminDashboard() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [pendingUsers, setPendingUsers] = useState<User[]>([]);
   const [careReqs, setCareReqs] = useState<CareRequest[]>([]);
@@ -55,36 +54,16 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <header className="bg-card border-b border-border sticky top-0 z-50">
-        <div className="container mx-auto flex items-center justify-between h-16 px-4">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl gradient-hero flex items-center justify-center">
-                <Heart className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <span className="font-display font-bold text-xl text-foreground">CareNest</span>
-            </Link>
-            <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">Admin</span>
-          </div>
-          <Button variant="ghost" size="icon" onClick={() => { logout(); navigate("/"); }}>
-            <LogOut className="w-5 h-5" />
-          </Button>
-        </div>
-      </header>
-
+      <DashboardHeader />
       <div className="container mx-auto p-4 md:p-8 max-w-5xl">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-2xl font-bold font-display text-foreground mb-1">Admin Dashboard</h1>
           <p className="text-muted-foreground text-sm mb-6">Manage users, care requests, and orphan support.</p>
 
-          {/* Stats */}
           <div className="grid grid-cols-3 gap-4 mb-8">
             {tabs.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
-                className={`p-5 rounded-2xl border-2 text-left transition-all ${tab === t.id ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/30"}`}
-              >
+              <button key={t.id} onClick={() => setTab(t.id)}
+                className={`p-5 rounded-2xl border-2 text-left transition-all ${tab === t.id ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/30"}`}>
                 <t.icon className={`w-6 h-6 mb-2 ${tab === t.id ? "text-primary" : "text-muted-foreground"}`} />
                 <p className="text-2xl font-bold font-display text-card-foreground">{t.count}</p>
                 <p className="text-sm text-muted-foreground">{t.label}</p>
@@ -92,7 +71,6 @@ export default function AdminDashboard() {
             ))}
           </div>
 
-          {/* Pending Users */}
           {tab === "users" && (
             <motion.div variants={container} initial="hidden" animate="show" className="space-y-3">
               <h2 className="text-lg font-bold font-display mb-4 text-foreground">Pending User Approvals</h2>
@@ -124,7 +102,6 @@ export default function AdminDashboard() {
             </motion.div>
           )}
 
-          {/* Care Requests */}
           {tab === "care" && (
             <motion.div variants={container} initial="hidden" animate="show" className="space-y-3">
               <h2 className="text-lg font-bold font-display mb-4 text-foreground">All Care Requests</h2>
@@ -152,7 +129,6 @@ export default function AdminDashboard() {
             </motion.div>
           )}
 
-          {/* Orphan Requests */}
           {tab === "orphan" && (
             <motion.div variants={container} initial="hidden" animate="show" className="space-y-3">
               <h2 className="text-lg font-bold font-display mb-4 text-foreground">All Orphan Support Requests</h2>

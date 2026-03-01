@@ -24,8 +24,8 @@ export interface OrphanRequest {
   userId: string;
 }
 
-const CARE_KEY = "carenest_care_requests";
-const ORPHAN_KEY = "carenest_orphan_requests";
+const CARE_KEY = "careconnect_care_requests";
+const ORPHAN_KEY = "careconnect_orphan_requests";
 
 export function getCareRequests(): CareRequest[] {
   return JSON.parse(localStorage.getItem(CARE_KEY) || "[]");
@@ -58,15 +58,14 @@ export function updateOrphanRequest(id: string, updates: Partial<OrphanRequest>)
 }
 
 export function getAllUsers() {
-  return JSON.parse(localStorage.getItem("carenest_users") || "[]");
+  return JSON.parse(localStorage.getItem("careconnect_users") || "[]");
 }
 
 export function updateUserStatus(userId: string, status: "approved" | "rejected") {
   const users = getAllUsers().map((u: any) => (u.id === userId ? { ...u, status } : u));
-  localStorage.setItem("carenest_users", JSON.stringify(users));
-  // Update current user if it's them
-  const current = JSON.parse(localStorage.getItem("carenest_user") || "null");
+  localStorage.setItem("careconnect_users", JSON.stringify(users));
+  const current = JSON.parse(localStorage.getItem("careconnect_user") || "null");
   if (current && current.id === userId) {
-    localStorage.setItem("carenest_user", JSON.stringify({ ...current, status }));
+    localStorage.setItem("careconnect_user", JSON.stringify({ ...current, status }));
   }
 }

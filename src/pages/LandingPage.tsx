@@ -66,7 +66,7 @@ export default function LandingPage() {
             <div className="w-9 h-9 rounded-xl gradient-hero flex items-center justify-center">
               <Heart className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-display font-bold text-xl text-foreground">CareNest</span>
+            <span className="font-display font-bold text-xl text-foreground">CareConnect</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a>
@@ -174,7 +174,7 @@ export default function LandingPage() {
               </p>
               <Link to="/register">
                 <Button variant="hero" size="lg">
-                  Join CareNest <ArrowRight className="w-5 h-5" />
+                  Join CareConnect <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>
             </motion.div>
@@ -252,9 +252,9 @@ export default function LandingPage() {
             <div className="w-8 h-8 rounded-lg gradient-hero flex items-center justify-center">
               <Heart className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="font-display font-bold text-foreground">CareNest</span>
+            <span className="font-display font-bold text-foreground">CareConnect</span>
           </div>
-          <p className="text-sm text-muted-foreground">© 2026 CareNest. Compassionate care, built on trust.</p>
+          <p className="text-sm text-muted-foreground">© 2026 CareConnect. Compassionate care, built on trust.</p>
         </div>
       </footer>
     </div>
