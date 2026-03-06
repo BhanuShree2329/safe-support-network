@@ -44,7 +44,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [consent1, setConsent1] = useState(false);
   const [consent2, setConsent2] = useState(false);
-  const { register } = useAuth();
+  const { register, addConsentRecord } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -52,7 +52,10 @@ export default function RegisterPage() {
 
   const handleRegister = () => {
     if (!selectedRole || !name || !email || !password) return;
-    register(name, email, password, selectedRole);
+    const newUser = register(name, email, password, selectedRole);
+    // Record consent history (immutable)
+    addConsentRecord("Terms of Service", "Agreed to CareConnect Terms of Service, data processing, role-based access policies.", "given");
+    addConsentRecord("Privacy & Consent Policy", "Agreed to privacy policy, consent history recording, and right to withdraw.", "given");
     toast({ title: "Account created!", description: "Please verify your OTP." });
     navigate("/otp-verify");
   };
@@ -168,7 +171,7 @@ export default function RegisterPage() {
                   </div>
                   <div className="flex gap-3 pt-2">
                     <Button variant="outline" size="lg" className="flex-1" onClick={() => setStep(1)}>Back</Button>
-                    <Button variant="hero" size="lg" className="flex-1" onClick={() => setStep(3)} disabled={!name || !email || !password}>Continue</Button>
+                    <Button variant="hero" size="lg" className="flex-1" onClick={() => setStep(3)} disabled={!name || !email || !password || strength.score < 2}>Continue</Button>
                   </div>
                 </form>
               </motion.div>
