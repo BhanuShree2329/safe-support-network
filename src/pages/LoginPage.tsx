@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { Heart, Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { Heart, Mail, Lock, Eye, EyeOff, ArrowLeft, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/form-elements";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,18 +11,21 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const user = login(email, password);
-    if (user) {
+    setError("");
+    const result = login(email, password);
+    if (result.user) {
       toast({ title: "Welcome back!", description: "Please verify your OTP." });
       navigate("/otp-verify");
     } else {
-      toast({ title: "Login failed", description: "Invalid email or password.", variant: "destructive" });
+      setError(result.error || "Invalid email or password.");
+      toast({ title: "Login failed", description: result.error || "Invalid email or password.", variant: "destructive" });
     }
   };
 
@@ -50,6 +53,14 @@ export default function LoginPage() {
 
           <h1 className="text-3xl font-bold font-display mb-2 text-foreground">Sign In</h1>
           <p className="text-muted-foreground mb-8">Enter your credentials to access your account.</p>
+
+          {error && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+              className="flex items-center gap-2 p-3 rounded-xl bg-destructive/10 border border-destructive/20 mb-6">
+              <AlertTriangle className="w-4 h-4 text-destructive flex-shrink-0" />
+              <p className="text-sm text-destructive">{error}</p>
+            </motion.div>
+          )}
 
           <form className="space-y-5" onSubmit={handleLogin}>
             <div className="space-y-2">
