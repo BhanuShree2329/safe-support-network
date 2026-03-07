@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Plus, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { getOrphanRequests, OrphanRequest } from "@/lib/mockData";
+import { getOrphanRequests, type OrphanRequest, type Priority } from "@/lib/mockData";
 import DashboardHeader from "@/components/DashboardHeader";
 
 const statusColors: Record<string, string> = {
@@ -12,6 +12,21 @@ const statusColors: Record<string, string> = {
   approved: "bg-info/10 text-info",
   assigned: "bg-primary/10 text-primary",
   completed: "bg-success/10 text-success",
+};
+
+const priorityColors: Record<Priority, string> = {
+  LOW: "bg-success/10 text-success",
+  MEDIUM: "bg-warning/10 text-warning",
+  HIGH: "bg-accent/10 text-accent",
+  SEVERE: "bg-destructive/10 text-destructive",
+};
+
+const adoptionStageLabels: Record<string, string> = {
+  applied: "Applied",
+  verified: "Verified",
+  approved: "Approved",
+  cooling_off: "Cooling Off",
+  finalized: "Finalized",
 };
 
 export default function OrphanDashboard() {
@@ -33,9 +48,7 @@ export default function OrphanDashboard() {
               <p className="text-muted-foreground text-sm">Manage your support requests</p>
             </div>
             <Link to="/orphan-request/new">
-              <Button variant="hero" size="lg" className="gap-2">
-                <Plus className="w-5 h-5" /> New Request
-              </Button>
+              <Button variant="hero" size="lg" className="gap-2"><Plus className="w-5 h-5" /> New Request</Button>
             </Link>
           </div>
 
@@ -51,20 +64,24 @@ export default function OrphanDashboard() {
                 <div key={r.id} className="bg-card rounded-2xl border border-border p-5 shadow-card">
                   <div className="flex items-start justify-between">
                     <div>
+                      <div className="flex items-center gap-2 flex-wrap mb-2">
+                        <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${statusColors[r.status]}`}>{r.status}</span>
+                        <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${priorityColors[r.priority]}`}>{r.priority}</span>
+                        {r.adoptionStage && (
+                          <span className="text-xs px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
+                            Adoption: {adoptionStageLabels[r.adoptionStage] || r.adoptionStage}
+                          </span>
+                        )}
+                      </div>
                       <div className="flex flex-wrap gap-1 mb-2">
                         {r.supportTypes.map((t) => (
                           <span key={t} className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{t}</span>
                         ))}
                       </div>
                       <p className="text-sm text-muted-foreground">{r.description}</p>
-                      {r.assignedNGO && (
-                        <p className="text-xs text-primary mt-2 font-medium">NGO Assigned ✓</p>
-                      )}
+                      {r.assignedNGO && <p className="text-xs text-primary mt-2 font-medium">NGO Assigned ✓</p>}
                       <p className="text-xs text-muted-foreground mt-1">{new Date(r.createdAt).toLocaleDateString()}</p>
                     </div>
-                    <span className={`text-xs px-3 py-1 rounded-full font-medium ${statusColors[r.status]}`}>
-                      {r.status}
-                    </span>
                   </div>
                 </div>
               ))}
